@@ -52,15 +52,12 @@
     <div id="setup-view" class="view">
         <h1>Welcome! First, Set Up Your API Key</h1>
         <p>This app uses the Google Gemini API to power live conversations. To begin, you need to provide your own API key.</p>
-        
         <h3>Step 1: Get Your API Key</h3>
         <p>Click the link below to go to Google AI Studio. You may need to sign in with your Google account. Click "Get API key" to create a new key.</p>
         <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Your Google Gemini API Key Here</a>
-        
         <h3>Step 2: Enter Your Key Below</h3>
         <p>Copy your new API key and paste it into the field below. The key will only be stored in your browser for this session.</p>
         <input type="password" id="api-key-input" class="api-key-input" placeholder="Paste your API key here">
-        
         <button class="nav-button setup-button" onclick="saveApiKey()">Save Key & Start Exploring</button>
     </div>
 
@@ -187,7 +184,7 @@ async function getGenerativeAIResponse(prompt) {
     const apiKey = sessionStorage.getItem('geminiApiKey');
     if (!apiKey) { throw new Error("API key not found. Please set it on the setup page."); }
     
-    // This is the corrected line for AI Studio keys
+    // This is the CORRECTED line for AI Studio keys, using v1beta.
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
     const payload = { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.5, maxOutputTokens: 500 } };
