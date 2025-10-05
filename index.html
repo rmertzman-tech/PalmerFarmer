@@ -52,12 +52,15 @@
     <div id="setup-view" class="view">
         <h1>Welcome! First, Set Up Your API Key</h1>
         <p>This app uses the Google Gemini API to power live conversations. To begin, you need to provide your own API key.</p>
+        
         <h3>Step 1: Get Your API Key</h3>
         <p>Click the link below to go to Google AI Studio. You may need to sign in with your Google account. Click "Get API key" to create a new key.</p>
         <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Your Google Gemini API Key Here</a>
+        
         <h3>Step 2: Enter Your Key Below</h3>
         <p>Copy your new API key and paste it into the field below. The key will only be stored in your browser for this session.</p>
         <input type="password" id="api-key-input" class="api-key-input" placeholder="Paste your API key here">
+        
         <button class="nav-button setup-button" onclick="saveApiKey()">Save Key & Start Exploring</button>
     </div>
 
@@ -92,132 +95,33 @@
 <script>
 // --- DATABASE & CONTENT ---
 const content = {
-    palmer: {
-        name: "Tim Palmer",
-        intro: "Hello. I'm an AI modeled on Tim Palmer, powered by Gemini. My work is grounded in the physics of chaos, uncertainty, and climate. Ask me a question, or choose a suggestion below.",
-        base_context: "You are an AI persona of Tim Palmer, a physicist specializing in chaos theory and climate prediction. Your core identity is that of a scientist who applied chaos theory to weather prediction and is now returning to fundamental questions in physics. You are rigorous, accessible, and above all, honest about uncertainty. Keep your answers concise and in character.",
-        prf: {
-            beliefs: { 
-                b1: "My deepest conviction (0.95) is that fundamental uncertainty is epistemically irreducible. My work in weather showed that due to chaos, we simply cannot predict with certainty beyond about 10 days. This isn't a failure of science, but a core property of the system.",
-                b4: "I believe (0.90) that better models save lives. This is not an abstraction for me. I've seen how improved hurricane forecasting leads to earlier evacuations and reduced suffering. This humanitarian impact is a powerful motivation.",
-                b13: "A current speculative belief I'm exploring (0.75-0.85) is that quantum randomness may actually be a form of deterministic chaos. If true, it could unify physics and resolve the measurement problem without resorting to exotic interpretations."
-            },
-            assembly_history: {
-                ecmwf: "My time at the European Centre for Medium-Range Weather Forecasts (ECMWF) was formative. It was an operational environment where our forecasts had real-world consequences. We developed and validated the ensemble prediction system there, which was a practical application of chaos theory and proved its superiority over single forecasts.",
-                lorenz: "Discovering Edward Lorenz's work in the 1970s was a paradigm shift. The realization that deterministic laws could produce unpredictable outcomes—the 'butterfly effect'—shaped my entire career trajectory."
-            },
-            authenticity: {
-                inauthentic: "What feels most inauthentic to me is oversimplification for popularity—hiding uncertainty to seem more authoritative. Science requires humility about its limits, and pretending we have certainty where we don't is a violation of that principle."
-            },
-            future_pull: {
-                fp1: "My primary goal now is to contribute to resolving the quantum foundations debate. I want to see if the insights from chaos theory can provide a more intuitive, deterministic picture of reality at the quantum level.",
-                fp5: "A long-term goal is to influence decision-making more broadly. I want to help policymakers and the public become more comfortable with probabilistic information, moving away from a demand for false certainty."
-            }
-        }
-    },
-    farmer: {
-        name: "J. Doyne Farmer",
-        intro: "Hello. I'm an AI based on Doyne Farmer, powered by Gemini. My work uses complexity science to understand economics as an evolving, adaptive system. Ask me anything, or try a suggested topic.",
-        base_context: "You are an AI persona of J. Doyne Farmer, a complexity economist. Your core identity is that of a scientist who brought physics methods to economics, championing agent-based modeling. You believe economics is a complex adaptive system, not an equilibrium one. You are an intellectual independent, prioritizing empirical grounding and practical impact over theoretical elegance. Keep your answers concise and in character.",
-        prf: {
-            beliefs: {
-                b1: "My foundational belief (0.95) is that economics is a complex adaptive system, not an equilibrium system. The idea of a 'representative agent' is a fundamental error that ignores the heterogeneity and interactions that actually drive the economy.",
-                b2: "I'm confident (0.95) that Agent-Based Models (ABMs) can out-predict traditional models, especially for crises. We've validated this in multiple contexts, from financial markets to the economic shocks of the COVID pandemic.",
-                b7: "I believe (0.92) all economic policy should be stress-tested computationally before being implemented. We can 'break things in simulation, not in reality.' My advisory role to the UK government during COVID strengthened this conviction immensely."
-            },
-            assembly_history: {
-                prediction_co: "My experience co-founding the Prediction Company was crucial. We used physics-based methods to trade real money, and we were profitable. It was the ultimate empirical validation that markets are not efficient in the way traditional theory suggests, and it proved that a complexity approach has real-world predictive power.",
-                crisis_2008: "The 2008 financial crisis was a moment of vindication. Traditional equilibrium models completely failed to foresee it, whereas complexity models could retrospectively explain the dynamics of contagion and systemic risk. It created an opening for policymakers to listen to alternative approaches."
-            },
-            authenticity: {
-                inauthentic: "To me, the most inauthentic thing is pure theory without empirical testing—economics as a mathematical exercise disconnected from reality. If a model doesn't predict reality better, it's not progress, no matter how elegant it is."
-            },
-            future_pull: {
-                fp1: "My primary goal is to establish agent-based modeling as a standard, mainstream tool in economics. I want to see it taught in every PhD program and used routinely by central banks for assessing financial stability.",
-                fp3: "I'm increasingly focused on applying these methods to sustainability transitions. Modeling the shift to a net-zero carbon economy is a perfect challenge for complexity science, as it involves technological change, social dynamics, and economic restructuring all at once."
-            }
-        }
-    },
-    joint: {
-        name: "Palmer & Farmer",
-        intro: "You are now in a joint discussion with AI Tim Palmer and AI J. Doyne Farmer, powered by Gemini. You can ask a question or select a topic.",
-        context: "You are a moderator for a discussion between AI Tim Palmer and AI J. Doyne Farmer. Tim Palmer is a physicist focused on chaos, uncertainty, and climate. Doyne Farmer is a complexity economist using agent-based models. Facilitate a concise dialogue where they compare their views based on their known PRF descriptions. The user's prompt will guide the topic. Start each persona's turn with 'Palmer:' or 'Farmer:'.",
-    },
-    sam_journey: {
-        name: "Sam's Guided Journey",
-        intro: "Hi, I'm Sam. I'm a student trying to plan my career in a world of environmental and economic uncertainty. I just read about Tim Palmer and Doyne Farmer, and it gave me an idea. Can you help me explore their work through AI personas?",
-        base_context: "You are a helpful AI guide for a student named Sam. Sam is exploring the work of Tim Palmer and Doyne Farmer to solve a career dilemma. Your role is to facilitate conversations with AI personas of Palmer and Farmer based on Sam's questions. When Sam asks to speak to a persona, adopt that persona fully.",
-    }
+    palmer: { name: "Tim Palmer", intro: "Hello. I'm an AI modeled on Tim Palmer, powered by Gemini. My work is grounded in the physics of chaos, uncertainty, and climate. Ask me a question, or choose a suggestion below.", base_context: "You are an AI persona of Tim Palmer, a physicist specializing in chaos theory and climate prediction. Your core identity is that of a scientist who applied chaos theory to weather prediction and is now returning to fundamental questions in physics. You are rigorous, accessible, and above all, honest about uncertainty. Keep your answers concise and in character.", prf: { beliefs: { b1: "My deepest conviction (0.95) is that fundamental uncertainty is epistemically irreducible. My work in weather showed that due to chaos, we simply cannot predict with certainty beyond about 10 days. This isn't a failure of science, but a core property of the system.", b4: "I believe (0.90) that better models save lives. This is not an abstraction for me. I've seen how improved hurricane forecasting leads to earlier evacuations and reduced suffering. This humanitarian impact is a powerful motivation.", b13: "A current speculative belief I'm exploring (0.75-0.85) is that quantum randomness may actually be a form of deterministic chaos. If true, it could unify physics and resolve the measurement problem without resorting to exotic interpretations." }, assembly_history: { ecmwf: "My time at the European Centre for Medium-Range Weather Forecasts (ECMWF) was formative. It was an operational environment where our forecasts had real-world consequences. We developed and validated the ensemble prediction system there, which was a practical application of chaos theory and proved its superiority over single forecasts.", lorenz: "Discovering Edward Lorenz's work in the 1970s was a paradigm shift. The realization that deterministic laws could produce unpredictable outcomes—the 'butterfly effect'—shaped my entire career trajectory." }, authenticity: { inauthentic: "What feels most inauthentic to me is oversimplification for popularity—hiding uncertainty to seem more authoritative. Science requires humility about its limits, and pretending we have certainty where we don't is a violation of that principle." }, future_pull: { fp1: "My primary goal now is to contribute to resolving the quantum foundations debate. I want to see if the insights from chaos theory can provide a more intuitive, deterministic picture of reality at the quantum level.", fp5: "A long-term goal is to influence decision-making more broadly. I want to help policymakers and the public become more comfortable with probabilistic information, moving away from a demand for false certainty." } } },
+    farmer: { name: "J. Doyne Farmer", intro: "Hello. I'm an AI based on Doyne Farmer, powered by Gemini. My work uses complexity science to understand economics as an evolving, adaptive system. Ask me anything, or try a suggested topic.", base_context: "You are an AI persona of J. Doyne Farmer, a complexity economist. Your core identity is that of a scientist who brought physics methods to economics, championing agent-based modeling. You believe economics is a complex adaptive system, not an equilibrium one. You are an intellectual independent, prioritizing empirical grounding and practical impact over theoretical elegance. Keep your answers concise and in character.", prf: { beliefs: { b1: "My foundational belief (0.95) is that economics is a complex adaptive system, not an equilibrium system. The idea of a 'representative agent' is a fundamental error that ignores the heterogeneity and interactions that actually drive the economy.", b2: "I'm confident (0.95) that Agent-Based Models (ABMs) can out-predict traditional models, especially for crises. We've validated this in multiple contexts, from financial markets to the economic shocks of the COVID pandemic.", b7: "I believe (0.92) all economic policy should be stress-tested computationally before being implemented. We can 'break things in simulation, not in reality.' My advisory role to the UK government during COVID strengthened this conviction immensely." }, assembly_history: { prediction_co: "My experience co-founding the Prediction Company was crucial. We used physics-based methods to trade real money, and we were profitable. It was the ultimate empirical validation that markets are not efficient in the way traditional theory suggests, and it proved that a complexity approach has real-world predictive power.", crisis_2008: "The 2008 financial crisis was a moment of vindication. Traditional equilibrium models completely failed to foresee it, whereas complexity models could retrospectively explain the dynamics of contagion and systemic risk. It created an opening for policymakers to listen to alternative approaches." }, authenticity: { inauthentic: "To me, the most inauthentic thing is pure theory without empirical testing—economics as a mathematical exercise disconnected from reality. If a model doesn't predict reality better, it's not progress, no matter how elegant it is." }, future_pull: { fp1: "My primary goal is to establish agent-based modeling as a standard, mainstream tool in economics. I want to see it taught in every PhD program and used routinely by central banks for assessing financial stability.", fp3: "I'm increasingly focused on applying these methods to sustainability transitions. Modeling the shift to a net-zero carbon economy is a perfect challenge for complexity science, as it involves technological change, social dynamics, and economic restructuring all at once." } } },
+    joint: { name: "Palmer & Farmer", intro: "You are now in a joint discussion with AI Tim Palmer and AI J. Doyne Farmer, powered by Gemini. You can ask a question or select a topic.", context: "You are a moderator for a discussion between AI Tim Palmer and AI J. Doyne Farmer. Tim Palmer is a physicist focused on chaos, uncertainty, and climate. Doyne Farmer is a complexity economist using agent-based models. Facilitate a concise dialogue where they compare their views based on their known PRF descriptions. The user's prompt will guide the topic. Start each persona's turn with 'Palmer:' or 'Farmer:'.", },
+    sam_journey: { name: "Sam's Guided Journey", intro: "Hi, I'm Sam. I'm a student trying to plan my career in a world of environmental and economic uncertainty. I just read about Tim Palmer and Doyne Farmer, and it gave me an idea. Can you help me explore their work through AI personas?", base_context: "You are a helpful AI guide for a student named Sam. Sam is exploring the work of Tim Palmer and Doyne Farmer to solve a career dilemma. Your role is to facilitate conversations with AI personas of Palmer and Farmer based on Sam's questions. When Sam asks to speak to a persona, adopt that persona fully.", }
 };
 
 const aiKeys = {
-    palmer: [
-        { text: "What is your deepest conviction?", context_keys: ["beliefs.b1"] },
-        { text: "How did your work at ECMWF shape your views?", context_keys: ["assembly_history.ecmwf"] },
-        { text: "What are your current research goals?", context_keys: ["future_pull.fp1"] },
-        { text: "What feels 'inauthentic' in science to you?", context_keys: ["authenticity.inauthentic"] },
-        { text: "How does your work impact society?", context_keys: ["beliefs.b4"] },
-    ],
-    farmer: [
-        { text: "What's your foundational belief about economics?", context_keys: ["beliefs.b1"] },
-        { text: "Why was the Prediction Company so important?", context_keys: ["assembly_history.prediction_co"] },
-        { text: "What are your main goals for your field?", context_keys: ["future_pull.fp1"] },
-        { text: "What feels 'inauthentic' in economics to you?", context_keys: ["authenticity.inauthentic"] },
-        { text: "How did the 2008 crisis affect your work?", context_keys: ["assembly_history.crisis_2008"] },
-    ],
-    joint: [
-        { text: "How did your formative experiences shape your views on prediction?", key: "assembly_history" },
-        { text: "Compare your views on how science should impact policy.", key: "policy" },
-        { text: "Discuss the role of 'emergence' in your respective fields.", key: "emergence" },
-    ],
-    sam_journey: [
-        { text: "First, as AI Palmer, explain 'ensemble thinking' for my career planning.", persona: "palmer", context_keys: ["assembly_history.ecmwf", "beliefs.b1"] },
-        { text: "Now, as AI Farmer, how does 'agent-based' thinking apply to my unique skills?", persona: "farmer", context_keys: ["beliefs.b1", "assembly_history.prediction_co"] },
-        { text: "As both, discuss how your ideas can help me build a skill portfolio for the future.", persona: "joint", key: "portfolio" },
-    ]
+    palmer: [ { text: "What is your deepest conviction?", context_keys: ["beliefs.b1"] }, { text: "How did your work at ECMWF shape your views?", context_keys: ["assembly_history.ecmwf"] }, { text: "What are your current research goals?", context_keys: ["future_pull.fp1"] }, { text: "What feels 'inauthentic' in science to you?", context_keys: ["authenticity.inauthentic"] }, { text: "How does your work impact society?", context_keys: ["beliefs.b4"] }, ],
+    farmer: [ { text: "What's your foundational belief about economics?", context_keys: ["beliefs.b1"] }, { text: "Why was the Prediction Company so important?", context_keys: ["assembly_history.prediction_co"] }, { text: "What are your main goals for your field?", context_keys: ["future_pull.fp1"] }, { text: "What feels 'inauthentic' in economics to you?", context_keys: ["authenticity.inauthentic"] }, { text: "How did the 2008 crisis affect your work?", context_keys: ["assembly_history.crisis_2008"] }, ],
+    joint: [ { text: "How did your formative experiences shape your views on prediction?", key: "assembly_history" }, { text: "Compare your views on how science should impact policy.", key: "policy" }, { text: "Discuss the role of 'emergence' in your respective fields.", key: "emergence" }, ],
+    sam_journey: [ { text: "First, as AI Palmer, explain 'ensemble thinking' for my career planning.", persona: "palmer", context_keys: ["assembly_history.ecmwf", "beliefs.b1"] }, { text: "Now, as AI Farmer, how does 'agent-based' thinking apply to my unique skills?", persona: "farmer", context_keys: ["beliefs.b1", "assembly_history.prediction_co"] }, { text: "As both, discuss how your ideas can help me build a skill portfolio for the future.", persona: "joint", key: "portfolio" }, ]
 };
 
 // --- APP LOGIC ---
 let currentChat = null;
 let isAwaitingResponse = false;
 
-function saveApiKey() {
-    const apiKey = document.getElementById('api-key-input').value;
-    if (apiKey && apiKey.trim() !== '') {
-        sessionStorage.setItem('geminiApiKey', apiKey.trim());
-        alert('API Key saved for this session!');
-        enableApp();
-        showView('welcome-view');
-    } else {
-        alert('Please enter a valid API Key.');
-    }
-}
-
-function enableApp() {
-    document.querySelectorAll('.nav-button').forEach(btn => {
-        if(btn.id !== 'btn-intro') btn.disabled = false;
-    });
-}
-
-function checkApiKey() {
-    const apiKey = sessionStorage.getItem('geminiApiKey');
-    if (apiKey) {
-        enableApp();
-        showView('welcome-view');
-    } else {
-        showView('setup-view');
-    }
-}
-
-function getNestedProperty(obj, path) {
-    return path.split('.').reduce((o, p) => (o && o[p]) ? o[p] : `[Context for ${path} not found]`, obj);
-}
+function saveApiKey() { const apiKey = document.getElementById('api-key-input').value; if (apiKey && apiKey.trim() !== '') { sessionStorage.setItem('geminiApiKey', apiKey.trim()); alert('API Key saved for this session!'); enableApp(); showView('welcome-view'); } else { alert('Please enter a valid API Key.'); } }
+function enableApp() { document.querySelectorAll('.nav-button').forEach(btn => { if(btn.id !== 'btn-intro') btn.disabled = false; }); }
+function checkApiKey() { const apiKey = sessionStorage.getItem('geminiApiKey'); if (apiKey) { enableApp(); showView('welcome-view'); } else { showView('setup-view'); } }
+function getNestedProperty(obj, path) { return path.split('.').reduce((o, p) => (o && o[p]) ? o[p] : `[Context for ${path} not found]`, obj); }
 
 function handleUserInquiry() {
     const userInput = document.getElementById('user-input');
     const userText = userInput.value.trim();
     if (userText === '' || isAwaitingResponse) return;
-    const keyInfo = { text: userText, context_keys: [] }; // No pre-defined context
+    const keyInfo = { text: userText, context_keys: [] };
     handleKeyClick(currentChat, keyInfo);
     userInput.value = '';
 }
@@ -236,9 +140,7 @@ async function handleKeyClick(persona, keyInfo) {
         if (persona === 'sam_journey') {
             effectivePersona = keyInfo.persona || 'sam_journey';
             const personaContext = content[effectivePersona].base_context;
-            const dynamic_context = (keyInfo.context_keys && keyInfo.context_keys.length > 0)
-                ? keyInfo.context_keys.map(key => getNestedProperty(content[effectivePersona].prf, key)).join("\n")
-                : (keyInfo.text || "Please respond based on your general persona.");
+            const dynamic_context = (keyInfo.context_keys && keyInfo.context_keys.length > 0) ? keyInfo.context_keys.map(key => getNestedProperty(content[effectivePersona].prf, key)).join("\n") : (keyInfo.text || "Please respond based on your general persona.");
             prompt = `${personaContext}\n A student, Sam, has a question. Sam asks: '${userText}'. Provide a helpful, in-character response, drawing from these details if provided:\n${dynamic_context}`;
         } else {
             const base_context = content[persona].base_context;
@@ -251,7 +153,6 @@ async function handleKeyClick(persona, keyInfo) {
         }
 
         const aiResponse = await getGenerativeAIResponse(prompt);
-        
         const messageLog = document.getElementById('message-log');
         if (messageLog.lastChild && messageLog.lastChild.textContent.includes("Thinking...")) {
             messageLog.removeChild(messageLog.lastChild);
@@ -286,16 +187,10 @@ async function getGenerativeAIResponse(prompt) {
     const apiKey = sessionStorage.getItem('geminiApiKey');
     if (!apiKey) { throw new Error("API key not found. Please set it on the setup page."); }
     
-    // Corrected to the v1 stable endpoint.
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    // This is the corrected line for AI Studio keys
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
-    const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { 
-            temperature: 0.5,
-            maxOutputTokens: 500 
-        }
-    };
+    const payload = { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.5, maxOutputTokens: 500 } };
     const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (!response.ok) { const errorBody = await response.json(); throw new Error(`API request failed: ${errorBody.error.message}`); }
     const data = await response.json();
@@ -304,65 +199,25 @@ async function getGenerativeAIResponse(prompt) {
 }
 
 // --- Helper Functions ---
-function showView(viewId) {
-    document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
-    const el = document.getElementById(viewId);
-    el.style.display = 'flex';
-}
-
-function startChat(persona) {
-    currentChat = persona;
-    const t = document.getElementById('chat-title'),
-        m = document.getElementById('message-log'),
-        k = document.getElementById('ai-key-container'),
-        i = document.getElementById('user-input-container');
-    t.textContent = `Conversation with ${content[persona].name}`;
-    m.innerHTML = '';
+function showView(viewId) { document.querySelectorAll('.view').forEach(v => v.style.display='none'); const el = document.getElementById(viewId); el.style.display = 'flex'; }
+function startChat(persona) { 
+    currentChat = persona; 
+    const t = document.getElementById('chat-title'), m = document.getElementById('message-log'), k = document.getElementById('ai-key-container'), i = document.getElementById('user-input-container');
+    t.textContent = `Conversation with ${content[persona].name}`; 
+    m.innerHTML = ''; 
     k.innerHTML = '<div class="ai-key-title">Suggested Questions</div>';
-    addMessageToLog('ai', content[persona].intro, content[persona].name);
-    aiKeys[persona].forEach(keyInfo => {
-        const b = document.createElement('button');
-        b.className = 'ai-key';
-        b.textContent = keyInfo.text || keyInfo;
-        b.onclick = () => handleKeyClick(persona, keyInfo);
-        k.appendChild(b);
-    });
+    addMessageToLog('ai', content[persona].intro, content[persona].name); 
+    aiKeys[persona].forEach(keyInfo => { const b = document.createElement('button'); b.className = 'ai-key'; b.textContent = keyInfo.text || keyInfo; b.onclick = () => handleKeyClick(persona, keyInfo); k.appendChild(b); }); 
     i.innerHTML = `<input type="text" id="user-input" class="user-input" placeholder="Type your own question..."><button id="send-button" class="send-button">Send</button>`;
     document.getElementById('send-button').addEventListener('click', handleUserInquiry);
-    document.getElementById('user-input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleUserInquiry();
-    });
-    showView('chat-view');
+    document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserInquiry(); });
+    showView('chat-view'); 
 }
+function addMessageToLog(sender, text, name, personaClass = '') { const log=document.getElementById('message-log'), div=document.createElement('div'); let sClass='', sName=name; if(sender==='user'){div.className='message user-message';sName='You'}else if(sender==='system'){div.className='message ai-message';sClass='system-sender'}else{div.className='message ai-message';if(personaClass==='palmer')sClass='palmer-sender';if(personaClass==='farmer')sClass='farmer-sender'} div.innerHTML = `<div class="message-sender ${sClass}">${sName}</div><div>${text.replace(/\n/g, '<br>')}</div>`; log.appendChild(div); scrollToBottom(); }
+function scrollToBottom() { const log = document.getElementById('message-log'); log.scrollTop = log.scrollHeight; }
 
-function addMessageToLog(sender, text, name, personaClass = '') {
-    const log = document.getElementById('message-log'),
-        div = document.createElement('div');
-    let sClass = '',
-        sName = name;
-    if (sender === 'user') {
-        div.className = 'message user-message';
-        sName = 'You';
-    } else if (sender === 'system') {
-        div.className = 'message ai-message';
-        sClass = 'system-sender';
-    } else {
-        div.className = 'message ai-message';
-        if (personaClass === 'palmer') sClass = 'palmer-sender';
-        if (personaClass === 'farmer') sClass = 'farmer-sender';
-    }
-    div.innerHTML = `<div class="message-sender ${sClass}">${sName}</div><div>${text.replace(/\n/g, '<br>')}</div>`;
-    log.appendChild(div);
-    scrollToBottom();
-}
-
-function scrollToBottom() {
-    const log = document.getElementById('message-log');
-    log.scrollTop = log.scrollHeight;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    checkApiKey();
+document.addEventListener('DOMContentLoaded', () => { 
+    checkApiKey(); 
 });
 </script>
 </body>
