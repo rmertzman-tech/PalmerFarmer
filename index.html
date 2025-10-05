@@ -92,10 +92,14 @@
  * 3. DELETE THE KEY and this repository immediately after your test is finished.
  ******************************************************************************/
 
+// --- CONFIGURATION ---
 const config = {
+    // PASTE YOUR NEWLY ENCODED 64-BIT API KEY INSIDE THE QUOTATION MARKS BELOW.
+    // MAKE SURE YOU COMPLETELY DELETE THIS PLACEHOLDER TEXT.
     encodedApiKey: "QUl6YVN5Q0RpOWQtbFRsYWR5bUp3Y3JRN0hoS1FnUmgzNEZtZ3JFLg=="
 };
 
+// --- DATABASE & CONTENT ---
 const content = {
     palmer: {
         name: "Tim Palmer",
@@ -176,13 +180,13 @@ async function handleKeyClick(persona, keyInfo) {
         let effectivePersona = persona;
 
         if (persona === 'sam_journey') {
-            effectivePersona = keyInfo.persona || 'sam_journey'; // Switch to Palmer/Farmer if specified
+            effectivePersona = keyInfo.persona || 'sam_journey';
             const personaContext = content[effectivePersona].base_context;
             const dynamic_context = (keyInfo.context_keys && keyInfo.context_keys.length > 0)
                 ? keyInfo.context_keys.map(key => getNestedProperty(content[effectivePersona].prf, key)).join("\n")
                 : "Please respond to the student's question based on your general persona.";
             prompt = `${personaContext}\n A student, Sam, is asking for help with their career planning. Sam asks: '${userText}'. Provide a helpful, in-character response, drawing from these specific details of your framework:\n${dynamic_context}`;
-        } else { // Standard and Joint chats
+        } else {
             const base_context = content[persona].base_context;
             let dynamic_context = "";
             if (persona !== 'joint' && keyInfo.context_keys && keyInfo.context_keys.length > 0) {
@@ -196,7 +200,9 @@ async function handleKeyClick(persona, keyInfo) {
         const aiResponse = await getGenerativeAIResponse(prompt);
         
         const messageLog = document.getElementById('message-log');
-        if (messageLog.lastChild) messageLog.removeChild(messageLog.lastChild);
+        if (messageLog.lastChild && messageLog.lastChild.textContent.includes("Thinking...")) {
+            messageLog.removeChild(messageLog.lastChild);
+        }
 
         if (effectivePersona === 'joint') {
             const turns = aiResponse.split(/(?=Palmer:|Farmer:)/i).filter(turn => turn.trim() !== '');
@@ -214,7 +220,9 @@ async function handleKeyClick(persona, keyInfo) {
     } catch (error) {
         console.error("API Error:", error);
         const messageLog = document.getElementById('message-log');
-        if(messageLog.lastChild) messageLog.removeChild(messageLog.lastChild);
+        if(messageLog.lastChild && messageLog.lastChild.textContent.includes("Thinking...")) {
+            messageLog.removeChild(messageLog.lastChild);
+        }
         addMessageToLog('system', `Sorry, an error occurred. Please ensure your API key is correct and has been activated. (Details: ${error.message})`, "System");
     } finally {
         isAwaitingResponse = false;
@@ -222,28 +230,46 @@ async function handleKeyClick(persona, keyInfo) {
 }
 
 async function getGenerativeAIResponse(prompt) {
-    if (!config.encodedApiKey || config.encodedApiKey === "QUl6YVN5Q0RpOWQtbFRsYWR5bUp3Y3JRN0hoS1FnUmgzNEZtZ3JFLg==") {
+    if (!config.encodedApiKey || config.encodedApiKey === "PASTE_YOUR_ENCODED_API_KEY_HERE" || config.encodedApiKey.trim() === "") {
         throw new Error("API key is not configured in the code.");
     }
     const apiKey = atob(config.encodedApiKey);
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    
+    // Using the most compatible endpoint and model name
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
+
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.5, maxOutputTokens: 500 }
+        generationConfig: { 
+            temperature: 0.5,
+            maxOutputTokens: 500 
+        }
     };
-    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    if (!response.ok) { const errorBody = await response.json(); throw new Error(`API request failed: ${errorBody.error.message}`); }
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(`API request failed: ${errorBody.error.message}`);
+    }
+
     const data = await response.json();
-    if (!data.candidates || data.candidates.length === 0) { throw new Error("API returned no candidates. This may be due to a safety block or invalid input."); }
+    if (!data.candidates || data.candidates.length === 0) {
+        throw new Error("API returned no candidates. This may be due to a safety block or invalid input.");
+    }
     return data.candidates[0].content.parts[0].text;
 }
 
-// Unchanged helper functions
 function showView(viewId) { document.querySelectorAll('.view').forEach(v => v.style.display='none'); const el = document.getElementById(viewId); el.style.display = (viewId.includes('chat')) ? 'block' : 'flex'; }
 function startChat(persona) { currentChat = persona; const t = document.getElementById('chat-title'), m = document.getElementById('message-log'), k = document.getElementById('ai-key-container'); t.textContent = `Conversation with ${content[persona].name}`; m.innerHTML = ''; k.innerHTML = ''; addMessageToLog('ai', content[persona].intro, content[persona].name); aiKeys[persona].forEach(i => { const b = document.createElement('button'); b.className = 'ai-key'; b.textContent = i.text || i; b.onclick = () => handleKeyClick(persona, i); k.appendChild(b); }); showView('chat-view'); }
 function addMessageToLog(sender, text, name, personaClass = '') { const log=document.getElementById('message-log'), div=document.createElement('div'); let sClass='', sName=name; if(sender==='user'){div.className='message user-message';sName='You'}else if(sender==='system'){div.className='message ai-message';sClass='system-sender'}else{div.className='message ai-message';if(personaClass==='palmer')sClass='palmer-sender';if(personaClass==='farmer')sClass='farmer-sender'} div.innerHTML = `<div class="message-sender ${sClass}">${sName}</div><div>${text.replace(/\n/g, '<br>')}</div>`; log.appendChild(div); scrollToBottom(); }
 function scrollToBottom() { const log = document.getElementById('message-log'); log.scrollTop = log.scrollHeight; }
 document.addEventListener('DOMContentLoaded', () => { showView('welcome-view'); });
+
 </script>
 </body>
 </html>
