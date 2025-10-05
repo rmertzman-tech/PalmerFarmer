@@ -222,7 +222,7 @@ async function handleKeyClick(persona, keyInfo) {
 }
 
 async function getGenerativeAIResponse(prompt) {
-    if (!config.encodedApiKey || config.encodedApiKey === "PASTE_YOUR_ENCODED_API_KEY_HERE") {
+    if (!config.encodedApiKey || config.encodedApiKey === "QUl6YVN5Q0RpOWQtbFRsYWR5bUp3Y3JRN0hoS1FnUmgzNEZtZ3JFLg==") {
         throw new Error("API key is not configured in the code.");
     }
     const apiKey = atob(config.encodedApiKey);
