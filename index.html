@@ -226,7 +226,7 @@ async function getGenerativeAIResponse(prompt) {
         throw new Error("API key is not configured in the code.");
     }
     const apiKey = atob(config.encodedApiKey);
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { temperature: 0.5, maxOutputTokens: 500 }
