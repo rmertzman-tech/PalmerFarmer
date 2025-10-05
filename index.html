@@ -32,9 +32,14 @@
         .palmer-sender { color: #27ae60; }
         .farmer-sender { color: #c0392b; }
         .system-sender { color: #7f8c8d; }
-        .ai-key-container { padding: 10px 0; border-top: 1px solid #ddd; text-align: center; }
+        .ai-key-container { padding: 10px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; text-align: center; }
+        .ai-key-title { font-size: 0.9em; color: #7f8c8d; margin-bottom: 10px; font-weight: bold; }
         .ai-key { background-color: #e8f4fd; color: #3498db; border: 1px solid #3498db; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin: 5px; transition: background-color 0.3s; }
         .ai-key:hover { background-color: #d1e9fc; }
+        .user-input-container { display: flex; padding: 15px 0 5px 0; gap: 10px; }
+        .user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 1em; }
+        .send-button { background-color: #27ae60; color: white; border: none; border-radius: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; transition: background-color 0.3s; }
+        .send-button:hover { background-color: #229954; }
         hr { border: 0; height: 1px; background: #ddd; margin: 25px 0; width: 80%; }
         a { color: #3498db; text-decoration: none; font-weight: bold; }
         a:hover { text-decoration: underline; }
@@ -47,15 +52,12 @@
     <div id="setup-view" class="view">
         <h1>Welcome! First, Set Up Your API Key</h1>
         <p>This app uses the Google Gemini API to power live conversations. To begin, you need to provide your own API key.</p>
-        
         <h3>Step 1: Get Your API Key</h3>
         <p>Click the link below to go to Google AI Studio. You may need to sign in with your Google account. Click "Get API key" to create a new key.</p>
         <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Your Google Gemini API Key Here</a>
-        
         <h3>Step 2: Enter Your Key Below</h3>
         <p>Copy your new API key and paste it into the field below. The key will only be stored in your browser for this session.</p>
         <input type="password" id="api-key-input" class="api-key-input" placeholder="Paste your API key here">
-        
         <button class="nav-button setup-button" onclick="saveApiKey()">Save Key & Start Exploring</button>
     </div>
 
@@ -79,6 +81,7 @@
             <h2 id="chat-title"></h2>
             <div class="message-log" id="message-log"></div>
             <div class="ai-key-container" id="ai-key-container"></div>
+            <div class="user-input-container" id="user-input-container"></div>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="nav-button back-button" onclick="showView('welcome-view')" style="width: 100%;">End Chat & Return Home</button>
             </div>
@@ -91,7 +94,7 @@
 const content = {
     palmer: {
         name: "Tim Palmer",
-        intro: "Hello. I'm an AI modeled on Tim Palmer, powered by Gemini. My work is grounded in the physics of chaos, uncertainty, and climate. Please select a topic to begin.",
+        intro: "Hello. I'm an AI modeled on Tim Palmer, powered by Gemini. My work is grounded in the physics of chaos, uncertainty, and climate. Ask me a question, or choose a suggestion below.",
         base_context: "You are an AI persona of Tim Palmer, a physicist specializing in chaos theory and climate prediction. Your core identity is that of a scientist who applied chaos theory to weather prediction and is now returning to fundamental questions in physics. You are rigorous, accessible, and above all, honest about uncertainty. Keep your answers concise and in character.",
         prf: {
             beliefs: { 
@@ -114,7 +117,7 @@ const content = {
     },
     farmer: {
         name: "J. Doyne Farmer",
-        intro: "Hello. I'm an AI based on Doyne Farmer, powered by Gemini. My work uses complexity science to understand economics as an evolving, adaptive system. Please choose a topic.",
+        intro: "Hello. I'm an AI based on Doyne Farmer, powered by Gemini. My work uses complexity science to understand economics as an evolving, adaptive system. Ask me anything, or try a suggested topic.",
         base_context: "You are an AI persona of J. Doyne Farmer, a complexity economist. Your core identity is that of a scientist who brought physics methods to economics, championing agent-based modeling. You believe economics is a complex adaptive system, not an equilibrium one. You are an intellectual independent, prioritizing empirical grounding and practical impact over theoretical elegance. Keep your answers concise and in character.",
         prf: {
             beliefs: {
@@ -137,7 +140,7 @@ const content = {
     },
     joint: {
         name: "Palmer & Farmer",
-        intro: "You are now in a joint discussion with AI Tim Palmer and AI J. Doyne Farmer, powered by Gemini. Please select a topic to begin the conversation.",
+        intro: "You are now in a joint discussion with AI Tim Palmer and AI J. Doyne Farmer, powered by Gemini. You can ask a question or select a topic.",
         context: "You are a moderator for a discussion between AI Tim Palmer and AI J. Doyne Farmer. Tim Palmer is a physicist focused on chaos, uncertainty, and climate. Doyne Farmer is a complexity economist using agent-based models. Facilitate a concise dialogue where they compare their views based on their known PRF descriptions. The user's prompt will guide the topic. Start each persona's turn with 'Palmer:' or 'Farmer:'.",
     },
     sam_journey: {
@@ -206,7 +209,18 @@ function checkApiKey() {
     }
 }
 
-function getNestedProperty(obj, path) { return path.split('.').reduce((o, p) => (o && o[p]) ? o[p] : `[Context for ${path} not found]`, obj); }
+function getNestedProperty(obj, path) {
+    return path.split('.').reduce((o, p) => (o && o[p]) ? o[p] : `[Context for ${path} not found]`, obj);
+}
+
+function handleUserInquiry() {
+    const userInput = document.getElementById('user-input');
+    const userText = userInput.value.trim();
+    if (userText === '' || isAwaitingResponse) return;
+    const keyInfo = { text: userText, context_keys: [] }; // No pre-defined context
+    handleKeyClick(currentChat, keyInfo);
+    userInput.value = '';
+}
 
 async function handleKeyClick(persona, keyInfo) {
     if (isAwaitingResponse) return;
@@ -224,16 +238,15 @@ async function handleKeyClick(persona, keyInfo) {
             const personaContext = content[effectivePersona].base_context;
             const dynamic_context = (keyInfo.context_keys && keyInfo.context_keys.length > 0)
                 ? keyInfo.context_keys.map(key => getNestedProperty(content[effectivePersona].prf, key)).join("\n")
-                : "Please respond to the student's question based on your general persona.";
-            prompt = `${personaContext}\n A student, Sam, is asking for help with their career planning. Sam asks: '${userText}'. Provide a helpful, in-character response, drawing from these specific details of your framework:\n${dynamic_context}`;
+                : (keyInfo.text || "Please respond based on your general persona.");
+            prompt = `${personaContext}\n A student, Sam, has a question. Sam asks: '${userText}'. Provide a helpful, in-character response, drawing from these details if provided:\n${dynamic_context}`;
         } else {
             const base_context = content[persona].base_context;
-            let dynamic_context = "";
             if (persona !== 'joint' && keyInfo.context_keys && keyInfo.context_keys.length > 0) {
-                dynamic_context = keyInfo.context_keys.map(key => getNestedProperty(content[persona].prf, key)).join("\n");
+                const dynamic_context = keyInfo.context_keys.map(key => getNestedProperty(content[persona].prf, key)).join("\n");
                 prompt = `${base_context} The user asked: '${userText}'. Provide a concise, in-character response, drawing from these specific details of your framework:\n${dynamic_context}`;
             } else {
-                prompt = `${base_context} The user's prompt is: '${userText}'. Please generate a concise, relevant response.`;
+                prompt = `${base_context} The user's question is: '${userText}'. Please generate a concise, relevant, in-character response.`;
             }
         }
 
@@ -271,12 +284,10 @@ async function handleKeyClick(persona, keyInfo) {
 
 async function getGenerativeAIResponse(prompt) {
     const apiKey = sessionStorage.getItem('geminiApiKey');
-    if (!apiKey) {
-        throw new Error("API key not found. Please set it on the setup page.");
-    }
+    if (!apiKey) { throw new Error("API key not found. Please set it on the setup page."); }
     
-    // Using a stable and widely available model endpoint.
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+    // Corrected to the v1 stable endpoint.
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -285,33 +296,73 @@ async function getGenerativeAIResponse(prompt) {
             maxOutputTokens: 500 
         }
     };
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-        const errorBody = await response.json();
-        throw new Error(`API request failed: ${errorBody.error.message}`);
-    }
-
+    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    if (!response.ok) { const errorBody = await response.json(); throw new Error(`API request failed: ${errorBody.error.message}`); }
     const data = await response.json();
-    if (!data.candidates || data.candidates.length === 0) {
-        throw new Error("API returned no candidates. This may be due to a safety block or invalid input.");
-    }
+    if (!data.candidates || data.candidates.length === 0) { throw new Error("API returned no candidates. This may be due to a safety block or invalid input."); }
     return data.candidates[0].content.parts[0].text;
 }
 
 // --- Helper Functions ---
-function showView(viewId) { document.querySelectorAll('.view').forEach(v => v.style.display='none'); const el = document.getElementById(viewId); el.style.display = 'flex'; }
-function startChat(persona) { currentChat = persona; const t = document.getElementById('chat-title'), m = document.getElementById('message-log'), k = document.getElementById('ai-key-container'); t.textContent = `Conversation with ${content[persona].name}`; m.innerHTML = ''; k.innerHTML = ''; addMessageToLog('ai', content[persona].intro, content[persona].name); aiKeys[persona].forEach(i => { const b = document.createElement('button'); b.className = 'ai-key'; b.textContent = i.text || i; b.onclick = () => handleKeyClick(persona, i); k.appendChild(b); }); showView('chat-view'); }
-function addMessageToLog(sender, text, name, personaClass = '') { const log=document.getElementById('message-log'), div=document.createElement('div'); let sClass='', sName=name; if(sender==='user'){div.className='message user-message';sName='You'}else if(sender==='system'){div.className='message ai-message';sClass='system-sender'}else{div.className='message ai-message';if(personaClass==='palmer')sClass='palmer-sender';if(personaClass==='farmer')sClass='farmer-sender'} div.innerHTML = `<div class="message-sender ${sClass}">${sName}</div><div>${text.replace(/\n/g, '<br>')}</div>`; log.appendChild(div); scrollToBottom(); }
-function scrollToBottom() { const log = document.getElementById('message-log'); log.scrollTop = log.scrollHeight; }
+function showView(viewId) {
+    document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+    const el = document.getElementById(viewId);
+    el.style.display = 'flex';
+}
 
-document.addEventListener('DOMContentLoaded', () => { 
-    checkApiKey(); 
+function startChat(persona) {
+    currentChat = persona;
+    const t = document.getElementById('chat-title'),
+        m = document.getElementById('message-log'),
+        k = document.getElementById('ai-key-container'),
+        i = document.getElementById('user-input-container');
+    t.textContent = `Conversation with ${content[persona].name}`;
+    m.innerHTML = '';
+    k.innerHTML = '<div class="ai-key-title">Suggested Questions</div>';
+    addMessageToLog('ai', content[persona].intro, content[persona].name);
+    aiKeys[persona].forEach(keyInfo => {
+        const b = document.createElement('button');
+        b.className = 'ai-key';
+        b.textContent = keyInfo.text || keyInfo;
+        b.onclick = () => handleKeyClick(persona, keyInfo);
+        k.appendChild(b);
+    });
+    i.innerHTML = `<input type="text" id="user-input" class="user-input" placeholder="Type your own question..."><button id="send-button" class="send-button">Send</button>`;
+    document.getElementById('send-button').addEventListener('click', handleUserInquiry);
+    document.getElementById('user-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleUserInquiry();
+    });
+    showView('chat-view');
+}
+
+function addMessageToLog(sender, text, name, personaClass = '') {
+    const log = document.getElementById('message-log'),
+        div = document.createElement('div');
+    let sClass = '',
+        sName = name;
+    if (sender === 'user') {
+        div.className = 'message user-message';
+        sName = 'You';
+    } else if (sender === 'system') {
+        div.className = 'message ai-message';
+        sClass = 'system-sender';
+    } else {
+        div.className = 'message ai-message';
+        if (personaClass === 'palmer') sClass = 'palmer-sender';
+        if (personaClass === 'farmer') sClass = 'farmer-sender';
+    }
+    div.innerHTML = `<div class="message-sender ${sClass}">${sName}</div><div>${text.replace(/\n/g, '<br>')}</div>`;
+    log.appendChild(div);
+    scrollToBottom();
+}
+
+function scrollToBottom() {
+    const log = document.getElementById('message-log');
+    log.scrollTop = log.scrollHeight;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    checkApiKey();
 });
 </script>
 </body>
