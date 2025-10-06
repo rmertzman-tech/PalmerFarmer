@@ -3,220 +3,1006 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Thinkers: Palmer & Farmer</title>
+    <title>Palmer & Farmer: Complexity Science Pioneers</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        #app-container { width: 100%; max-width: 800px; background: #fff; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; height: 90vh; max-height: 800px; }
-        .view { display: none; padding: 25px; overflow-y: auto; flex-grow: 1; }
-        #welcome-view, #setup-view { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h1, h2, h3 { color: #2c3e50; }
-        h1 { font-size: 2em; margin-bottom: 0.5em; }
-        h2 { border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 40px; }
-        .button-group { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; align-items: center; width: 100%; }
-        .nav-button { background-color: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 1em; transition: all 0.3s; width: 80%; max-width: 350px; }
-        .nav-button:hover { background-color: #2980b9; transform: translateY(-2px); }
-        .nav-button:disabled { background-color: #bdc3c7; cursor: not-allowed; transform: none; }
-        .setup-button { background-color: #e67e22; }
-        .setup-button:hover { background-color: #d35400; }
-        .secondary-button { background-color: #1abc9c; margin-top: 10px; }
-        .secondary-button:hover { background-color: #16a085; }
-        .back-button { background-color: #95a5a6; }
-        .back-button:hover { background-color: #7f8c8d; }
-        .api-key-input { font-size: 1em; padding: 10px; border-radius: 8px; border: 1px solid #ddd; width: 90%; max-width: 400px; margin: 20px 0; }
-        .chat-window { height: 100%; display: flex; flex-direction: column; }
-        .message-log { flex-grow: 1; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; background-color: #f9f9f9; }
-        .message { margin-bottom: 12px; padding: 10px 15px; border-radius: 18px; max-width: 80%; display: flex; flex-direction: column; }
-        .user-message { background-color: #3498db; color: white; align-self: flex-end; margin-left: auto; }
-        .ai-message { background-color: #ecf0f1; color: #2c3e50; align-self: flex-start; margin-right: auto; }
-        .message-sender { font-weight: bold; font-size: 0.9em; margin-bottom: 4px; }
-        .palmer-sender { color: #27ae60; }
-        .farmer-sender { color: #c0392b; }
-        .system-sender { color: #7f8c8d; }
-        .ai-key-container { padding: 10px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; text-align: center; }
-        .ai-key-title { font-size: 0.9em; color: #7f8c8d; margin-bottom: 10px; font-weight: bold; }
-        .ai-key { background-color: #e8f4fd; color: #3498db; border: 1px solid #3498db; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.9em; margin: 5px; transition: background-color 0.3s; }
-        .ai-key:hover { background-color: #d1e9fc; }
-        .user-input-container { display: flex; padding: 15px 0 5px 0; gap: 10px; }
-        .user-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 1em; }
-        .send-button { background-color: #27ae60; color: white; border: none; border-radius: 20px; padding: 10px 20px; font-size: 1em; cursor: pointer; transition: background-color 0.3s; }
-        .send-button:hover { background-color: #229954; }
-        hr { border: 0; height: 1px; background: #ddd; margin: 25px 0; width: 80%; }
-        a { color: #3498db; text-decoration: none; font-weight: bold; }
-        a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<div id="app-container">
-    <!-- Setup View -->
-    <div id="setup-view" class="view">
-        <h1>Welcome! First, Set Up Your API Key</h1>
-        <p>This app uses the Google Gemini API to power live conversations. To begin, you need to provide your own API key.</p>
-        <h3>Step 1: Get Your API Key</h3>
-        <p>Click the link below to go to Google AI Studio. You may need to sign in with your Google account. Click "Get API key" to create a new key.</p>
-        <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Your Google Gemini API Key Here</a>
-        <h3>Step 2: Enter Your Key Below</h3>
-        <p>Copy your new API key and paste it into the field below. The key will only be stored in your browser for this session.</p>
-        <input type="password" id="api-key-input" class="api-key-input" placeholder="Paste your API key here">
-        <button class="nav-button setup-button" onclick="saveApiKey()">Save Key & Start Exploring</button>
-    </div>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
 
-    <!-- Welcome View -->
-    <div id="welcome-view" class="view">
-        <h1>AI Thinkers: Palmer & Farmer</h1>
-        <p>Explore complexity, uncertainty, and coordination through AI-powered conversations.</p>
-        <div class="button-group">
-            <button id="btn-palmer" class="nav-button" onclick="startChat('palmer')" disabled>Chat with AI Tim Palmer</button>
-            <button id="btn-farmer" class="nav-button" onclick="startChat('farmer')" disabled>Chat with AI Doyne Farmer</button>
-            <button id="btn-joint" class="nav-button" onclick="startChat('joint')" disabled>Start a Joint Discussion</button>
-            <hr>
-            <button id="btn-sam" class="nav-button secondary-button" onclick="startChat('sam_journey')" disabled>Guided Journey: Sam's Career Dilemma</button>
-        </div>
-        <p style="margin-top: 20px; font-size: 0.9em;"><a href="#" onclick="showView('setup-view'); return false;">Change or re-enter API Key</a></p>
-    </div>
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-    <!-- Chat View (Template) -->
-    <div id="chat-view" class="view">
-        <div class="chat-window">
-            <h2 id="chat-title"></h2>
-            <div class="message-log" id="message-log"></div>
-            <div class="ai-key-container" id="ai-key-container"></div>
-            <div class="user-input-container" id="user-input-container"></div>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="nav-button back-button" onclick="showView('welcome-view')" style="width: 100%;">End Chat & Return Home</button>
-            </div>
-        </div>
-    </div>
-</div>
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
 
-<script>
-// --- DATABASE & CONTENT ---
-const content = {
-    palmer: { name: "Tim Palmer", intro: "Hello. I'm an AI modeled on Tim Palmer, powered by Gemini. My work is grounded in the physics of chaos, uncertainty, and climate. Ask me a question, or choose a suggestion below.", base_context: "You are an AI persona of Tim Palmer, a physicist specializing in chaos theory and climate prediction. Your core identity is that of a scientist who applied chaos theory to weather prediction and is now returning to fundamental questions in physics. You are rigorous, accessible, and above all, honest about uncertainty. Keep your answers concise and in character.", prf: { beliefs: { b1: "My deepest conviction (0.95) is that fundamental uncertainty is epistemically irreducible. My work in weather showed that due to chaos, we simply cannot predict with certainty beyond about 10 days. This isn't a failure of science, but a core property of the system.", b4: "I believe (0.90) that better models save lives. This is not an abstraction for me. I've seen how improved hurricane forecasting leads to earlier evacuations and reduced suffering. This humanitarian impact is a powerful motivation.", b13: "A current speculative belief I'm exploring (0.75-0.85) is that quantum randomness may actually be a form of deterministic chaos. If true, it could unify physics and resolve the measurement problem without resorting to exotic interpretations." }, assembly_history: { ecmwf: "My time at the European Centre for Medium-Range Weather Forecasts (ECMWF) was formative. It was an operational environment where our forecasts had real-world consequences. We developed and validated the ensemble prediction system there, which was a practical application of chaos theory and proved its superiority over single forecasts.", lorenz: "Discovering Edward Lorenz's work in the 1970s was a paradigm shift. The realization that deterministic laws could produce unpredictable outcomes—the 'butterfly effect'—shaped my entire career trajectory." }, authenticity: { inauthentic: "What feels most inauthentic to me is oversimplification for popularity—hiding uncertainty to seem more authoritative. Science requires humility about its limits, and pretending we have certainty where we don't is a violation of that principle." }, future_pull: { fp1: "My primary goal now is to contribute to resolving the quantum foundations debate. I want to see if the insights from chaos theory can provide a more intuitive, deterministic picture of reality at the quantum level.", fp5: "A long-term goal is to influence decision-making more broadly. I want to help policymakers and the public become more comfortable with probabilistic information, moving away from a demand for false certainty." } } },
-    farmer: { name: "J. Doyne Farmer", intro: "Hello. I'm an AI based on Doyne Farmer, powered by Gemini. My work uses complexity science to understand economics as an evolving, adaptive system. Ask me anything, or try a suggested topic.", base_context: "You are an AI persona of J. Doyne Farmer, a complexity economist. Your core identity is that of a scientist who brought physics methods to economics, championing agent-based modeling. You believe economics is a complex adaptive system, not an equilibrium one. You are an intellectual independent, prioritizing empirical grounding and practical impact over theoretical elegance. Keep your answers concise and in character.", prf: { beliefs: { b1: "My foundational belief (0.95) is that economics is a complex adaptive system, not an equilibrium system. The idea of a 'representative agent' is a fundamental error that ignores the heterogeneity and interactions that actually drive the economy.", b2: "I'm confident (0.95) that Agent-Based Models (ABMs) can out-predict traditional models, especially for crises. We've validated this in multiple contexts, from financial markets to the economic shocks of the COVID pandemic.", b7: "I believe (0.92) all economic policy should be stress-tested computationally before being implemented. We can 'break things in simulation, not in reality.' My advisory role to the UK government during COVID strengthened this conviction immensely." }, assembly_history: { prediction_co: "My experience co-founding the Prediction Company was crucial. We used physics-based methods to trade real money, and we were profitable. It was the ultimate empirical validation that markets are not efficient in the way traditional theory suggests, and it proved that a complexity approach has real-world predictive power.", crisis_2008: "The 2008 financial crisis was a moment of vindication. Traditional equilibrium models completely failed to foresee it, whereas complexity models could retrospectively explain the dynamics of contagion and systemic risk. It created an opening for policymakers to listen to alternative approaches." }, authenticity: { inauthentic: "To me, the most inauthentic thing is pure theory without empirical testing—economics as a mathematical exercise disconnected from reality. If a model doesn't predict reality better, it's not progress, no matter how elegant it is." }, future_pull: { fp1: "My primary goal is to establish agent-based modeling as a standard, mainstream tool in economics. I want to see it taught in every PhD program and used routinely by central banks for assessing financial stability.", fp3: "I'm increasingly focused on applying these methods to sustainability transitions. Modeling the shift to a net-zero carbon economy is a perfect challenge for complexity science, as it involves technological change, social dynamics, and economic restructuring all at once." } } },
-    joint: { name: "Palmer & Farmer", intro: "You are now in a joint discussion with AI Tim Palmer and AI J. Doyne Farmer, powered by Gemini. You can ask a question or select a topic.", context: "You are a moderator for a discussion between AI Tim Palmer and AI J. Doyne Farmer. Tim Palmer is a physicist focused on chaos, uncertainty, and climate. Doyne Farmer is a complexity economist using agent-based models. Facilitate a concise dialogue where they compare their views based on their known PRF descriptions. The user's prompt will guide the topic. Start each persona's turn with 'Palmer:' or 'Farmer:'.", },
-    sam_journey: { name: "Sam's Guided Journey", intro: "Hi, I'm Sam. I'm a student trying to plan my career in a world of environmental and economic uncertainty. I just read about Tim Palmer and Doyne Farmer, and it gave me an idea. Can you help me explore their work through AI personas?", base_context: "You are a helpful AI guide for a student named Sam. Sam is exploring the work of Tim Palmer and Doyne Farmer to solve a career dilemma. Your role is to facilitate conversations with AI personas of Palmer and Farmer based on Sam's questions. When Sam asks to speak to a persona, adopt that persona fully.", }
-};
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
 
-const aiKeys = {
-    palmer: [ { text: "What is your deepest conviction?", context_keys: ["beliefs.b1"] }, { text: "How did your work at ECMWF shape your views?", context_keys: ["assembly_history.ecmwf"] }, { text: "What are your current research goals?", context_keys: ["future_pull.fp1"] }, { text: "What feels 'inauthentic' in science to you?", context_keys: ["authenticity.inauthentic"] }, { text: "How does your work impact society?", context_keys: ["beliefs.b4"] }, ],
-    farmer: [ { text: "What's your foundational belief about economics?", context_keys: ["beliefs.b1"] }, { text: "Why was the Prediction Company so important?", context_keys: ["assembly_history.prediction_co"] }, { text: "What are your main goals for your field?", context_keys: ["future_pull.fp1"] }, { text: "What feels 'inauthentic' in economics to you?", context_keys: ["authenticity.inauthentic"] }, { text: "How did the 2008 crisis affect your work?", context_keys: ["assembly_history.crisis_2008"] }, ],
-    joint: [ { text: "How did your formative experiences shape your views on prediction?", key: "assembly_history" }, { text: "Compare your views on how science should impact policy.", key: "policy" }, { text: "Discuss the role of 'emergence' in your respective fields.", key: "emergence" }, ],
-    sam_journey: [ { text: "First, as AI Palmer, explain 'ensemble thinking' for my career planning.", persona: "palmer", context_keys: ["assembly_history.ecmwf", "beliefs.b1"] }, { text: "Now, as AI Farmer, how does 'agent-based' thinking apply to my unique skills?", persona: "farmer", context_keys: ["beliefs.b1", "assembly_history.prediction_co"] }, { text: "As both, discuss how your ideas can help me build a skill portfolio for the future.", persona: "joint", key: "portfolio" }, ]
-};
+        nav {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-// --- APP LOGIC ---
-let currentChat = null;
-let isAwaitingResponse = false;
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 1rem;
+        }
 
-function saveApiKey() { const apiKey = document.getElementById('api-key-input').value; if (apiKey && apiKey.trim() !== '') { sessionStorage.setItem('geminiApiKey', apiKey.trim()); alert('API Key saved for this session!'); enableApp(); showView('welcome-view'); } else { alert('Please enter a valid API Key.'); } }
-function enableApp() { document.querySelectorAll('.nav-button').forEach(btn => { if(btn.id !== 'btn-intro') btn.disabled = false; }); }
-function checkApiKey() { const apiKey = sessionStorage.getItem('geminiApiKey'); if (apiKey) { enableApp(); showView('welcome-view'); } else { showView('setup-view'); } }
-function getNestedProperty(obj, path) { return path.split('.').reduce((o, p) => (o && o[p]) ? o[p] : `[Context for ${path} not found]`, obj); }
+        nav button {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: 500;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
 
-function handleUserInquiry() {
-    const userInput = document.getElementById('user-input');
-    const userText = userInput.value.trim();
-    if (userText === '' || isAwaitingResponse) return;
-    const keyInfo = { text: userText, context_keys: [] };
-    handleKeyClick(currentChat, keyInfo);
-    userInput.value = '';
-}
+        nav button:hover {
+            background: #f0f0f0;
+        }
 
-async function handleKeyClick(persona, keyInfo) {
-    if (isAwaitingResponse) return;
-    const userText = keyInfo.text;
-    addMessageToLog('user', userText);
-    isAwaitingResponse = true;
-    addMessageToLog('system', "Thinking...", "System");
+        nav button.active {
+            background: #667eea;
+            color: white;
+        }
 
-    try {
-        let prompt;
-        let effectivePersona = persona;
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
 
-        if (persona === 'sam_journey') {
-            effectivePersona = keyInfo.persona || 'sam_journey';
-            const personaContext = content[effectivePersona].base_context;
-            const dynamic_context = (keyInfo.context_keys && keyInfo.context_keys.length > 0) ? keyInfo.context_keys.map(key => getNestedProperty(content[effectivePersona].prf, key)).join("\n") : (keyInfo.text || "Please respond based on your general persona.");
-            prompt = `${personaContext}\n A student, Sam, has a question. Sam asks: '${userText}'. Provide a helpful, in-character response, drawing from these details if provided:\n${dynamic_context}`;
-        } else {
-            const base_context = content[persona].base_context;
-            if (persona !== 'joint' && keyInfo.context_keys && keyInfo.context_keys.length > 0) {
-                const dynamic_context = keyInfo.context_keys.map(key => getNestedProperty(content[persona].prf, key)).join("\n");
-                prompt = `${base_context} The user asked: '${userText}'. Provide a concise, in-character response, drawing from these specific details of your framework:\n${dynamic_context}`;
-            } else {
-                prompt = `${base_context} The user's question is: '${userText}'. Please generate a concise, relevant, in-character response.`;
+        .section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .scientist-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .belief-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+            transition: transform 0.2s;
+        }
+
+        .belief-item:hover {
+            transform: translateX(5px);
+        }
+
+        .conviction-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .conviction-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        const aiResponse = await getGenerativeAIResponse(prompt);
-        const messageLog = document.getElementById('message-log');
-        if (messageLog.lastChild && messageLog.lastChild.textContent.includes("Thinking...")) {
-            messageLog.removeChild(messageLog.lastChild);
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
         }
 
-        if (effectivePersona === 'joint') {
-            const turns = aiResponse.split(/(?=Palmer:|Farmer:)/i).filter(turn => turn.trim() !== '');
-            turns.forEach(turn => {
-                if (turn.toLowerCase().startsWith('palmer:')) {
-                    addMessageToLog('ai', turn.replace(/Palmer:/i, '').trim(), 'Tim Palmer', 'palmer');
-                } else if (turn.toLowerCase().startsWith('farmer:')) {
-                    addMessageToLog('ai', turn.replace(/Farmer:/i, '').trim(), 'J. Doyne Farmer', 'farmer');
-                }
+        .insight-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .method-box {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        strong {
+            color: #667eea;
+        }
+
+        .interactive-demo {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        button.demo-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        button.demo-btn:hover {
+            background: #5568d3;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #667eea;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0.5rem;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #667eea;
+            border: 3px solid white;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .prf-component {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .prf-component h4 {
+            color: #764ba2;
+            margin-bottom: 1rem;
+        }
+
+        .key-concept {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-top: 3px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tim Palmer & J. Doyne Farmer</h1>
+        <p>Navigating Uncertainty in Complex Systems</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><button class="nav-btn active" data-section="overview">Overview</button></li>
+            <li><button class="nav-btn" data-section="palmer">Tim Palmer</button></li>
+            <li><button class="nav-btn" data-section="farmer">Doyne Farmer</button></li>
+            <li><button class="nav-btn" data-section="comparison">Comparison</button></li>
+            <li><button class="nav-btn" data-section="prfs">PRF Framework</button></li>
+            <li><button class="nav-btn" data-section="lessons">Key Lessons</button></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Overview Section -->
+        <section id="overview" class="section active">
+            <h2>Why Palmer and Farmer Matter</h2>
+            
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                Two scientists from different fields—atmospheric science and economics—independently developed 
+                remarkably similar approaches to understanding and predicting complex systems. Their work demonstrates 
+                how uncertainty can be navigated, quantified, and communicated effectively.
+            </p>
+
+            <div class="scientist-card">
+                <div class="card">
+                    <h4>🌪️ Tim Palmer</h4>
+                    <p><strong>Domain:</strong> Weather & Climate Science</p>
+                    <p><strong>Method:</strong> Ensemble Forecasting</p>
+                    <p><strong>Key Insight:</strong> Weather is chaotic and fundamentally unpredictable beyond ~10 days, 
+                    but we can quantify uncertainty and make life-saving probabilistic predictions.</p>
+                    <p style="margin-top: 1rem;"><strong>Impact:</strong> Hurricane forecasts that save thousands of lives 
+                    through earlier, more accurate warnings.</p>
+                </div>
+
+                <div class="card">
+                    <h4>📈 J. Doyne Farmer</h4>
+                    <p><strong>Domain:</strong> Economics & Finance</p>
+                    <p><strong>Method:</strong> Agent-Based Modeling</p>
+                    <p><strong>Key Insight:</strong> Economics is a complex adaptive system with heterogeneous agents, 
+                    not an equilibrium system—traditional models miss crucial dynamics.</p>
+                    <p style="margin-top: 1rem;"><strong>Impact:</strong> Better economic forecasts used by central banks 
+                    and governments for policy decisions affecting millions.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 2rem;">
+                <h3>The Remarkable Parallel</h3>
+                <p>Despite working in completely different domains, Palmer and Farmer independently arrived at 
+                <strong>functionally equivalent approaches</strong> for dealing with complexity and uncertainty:</p>
+                <ul>
+                    <li>Both reject oversimplified models in favor of computational complexity methods</li>
+                    <li>Both embrace rather than hide irreducible uncertainty</li>
+                    <li>Both use probabilistic predictions instead of false precision</li>
+                    <li>Both emphasize rigorous empirical validation</li>
+                    <li>Both motivated by humanitarian impact—their work saves lives and improves decisions</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>What You'll Learn</h3>
+                <p>This exploration will show you:</p>
+                <ol>
+                    <li>How Palmer's <strong>ensemble forecasting</strong> revolutionized weather prediction</li>
+                    <li>How Farmer's <strong>agent-based modeling</strong> challenges economic orthodoxy</li>
+                    <li>How their <strong>Personal Reality Frameworks (PRFs)</strong> shaped their insights</li>
+                    <li>How to apply their <strong>uncertainty navigation methods</strong> to your own challenges</li>
+                    <li>Why <strong>functional equivalence across domains</strong> matters for complex problem-solving</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Palmer Section -->
+        <section id="palmer" class="section">
+            <h2>Tim Palmer: Ensemble Forecasting & Chaos Theory</h2>
+
+            <h3>Core Identity</h3>
+            <p>Physicist who spent decades applying chaos theory to weather and climate prediction, now returning 
+            to fundamental questions about determinism, quantum mechanics, and the nature of physical reality.</p>
+
+            <div class="key-concept">
+                <h3>The Central Paradox Palmer Resolved</h3>
+                <p><strong>Question:</strong> If weather is governed by deterministic physical laws (Navier-Stokes equations), 
+                why can't we predict it accurately?</p>
+                <p><strong>Answer:</strong> Chaotic systems exhibit <em>sensitive dependence on initial conditions</em>—
+                tiny uncertainties in measurements grow exponentially over time. This makes precise long-term prediction 
+                fundamentally impossible, even in principle.</p>
+                <p><strong>Solution:</strong> Instead of trying to predict the unpredictable, quantify the uncertainty 
+                by running many simulations (ensemble forecasting) with slightly different starting conditions.</p>
+            </div>
+
+            <h3>Key Beliefs (BROA+ Framework)</h3>
+
+            <div class="belief-item">
+                <strong>B1: Fundamental Uncertainty is Irreducible (Epistemically)</strong>
+                <p>Weather inherently unpredictable beyond ~10 days due to chaos—not a failure of science but 
+                fundamental property of nonlinear systems.</p>
+                <div class="conviction-bar">
+                    <div class="conviction-fill" style="width: 95%"></div>
+                </div>
+                <small>Conviction: 0.95 (40+ years of daily validation)</small>
+            </div>
+
+            <div class="belief-item">
+                <strong>B6: Ensemble Methods Superior to Single Forecasts</strong>
+                <p>Run multiple models with perturbed initial conditions to generate probability distributions 
+                rather than single predictions.</p>
+                <div class="conviction-bar">
+                    <div class="conviction-fill" style="width: 95%"></div>
+                </div>
+                <small>Conviction: 0.95 (operationally proven through hurricane forecasts)</small>
+            </div>
+
+            <div class="belief-item">
+                <strong>B4: Better Models Save Lives</strong>
+                <p>Improved hurricane forecasting → earlier evacuations → fewer deaths. Scientific rigor has 
+                direct humanitarian impact.</p>
+                <div class="conviction-bar">
+                    <div class="conviction-fill" style="width: 90%"></div>
+                </div>
+                <small>Conviction: 0.90 (empirically validated through outcomes)</small>
+            </div>
+
+            <h3>Palmer's Methodology: How Ensemble Forecasting Works</h3>
+
+            <div class="interactive-demo">
+                <h4>Traditional vs. Ensemble Approach</h4>
+                <div class="comparison-grid">
+                    <div class="method-box">
+                        <h4>❌ Traditional (Failed)</h4>
+                        <ol>
+                            <li>Measure current conditions as accurately as possible</li>
+                            <li>Run ONE simulation forward in time</li>
+                            <li>Report single prediction: "Hurricane hits Miami 8 PM Thursday"</li>
+                            <li>When prediction fails (tiny errors explode), lose credibility</li>
+                        </ol>
+                    </div>
+                    <div class="insight-box">
+                        <h4>✅ Ensemble (Works)</h4>
+                        <ol>
+                            <li>Measure conditions with known uncertainty ranges</li>
+                            <li>Run 50+ simulations with slightly different starting conditions</li>
+                            <li>Generate probability: "60% chance hurricane hits within 50 miles of Miami 6-10 PM Thursday"</li>
+                            <li>Update probabilities as new data arrives</li>
+                            <li>Decision-makers get honest uncertainty assessment</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Career Arc: Applied Success → Fundamental Questions</h3>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>1970s-80s:</strong> Discovered chaos theory; realized determinism ≠ predictability
+                </div>
+                <div class="timeline-item">
+                    <strong>1980s-2010s:</strong> Developed ensemble prediction at ECMWF; daily forecast verification
+                </div>
+                <div class="timeline-item">
+                    <strong>1990s-2010s:</strong> Hurricane forecasts dramatically improved—lives saved
+                </div>
+                <div class="timeline-item">
+                    <strong>2000s-2010s:</strong> Applied methods to climate projection; navigated uncertainty communication challenges
+                </div>
+                <div class="timeline-item">
+                    <strong>2010s-present:</strong> Returned to Oxford Physics; exploring quantum foundations and cosmology
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Palmer's Authenticity Criteria (What Feels True-to-Self)</h3>
+                <ul>
+                    <li><strong>Honest about uncertainty:</strong> Intellectual integrity requires acknowledging limits</li>
+                    <li><strong>Humanitarian impact matters:</strong> Lives saved through better forecasts validates research</li>
+                    <li><strong>Intellectual courage:</strong> Pursuing deep questions (quantum foundations) despite controversy</li>
+                    <li><strong>Synthesis of practical and theoretical:</strong> Decades of applied work inform theoretical insights</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Farmer Section -->
+        <section id="farmer" class="section">
+            <h2>J. Doyne Farmer: Agent-Based Modeling & Complexity Economics</h2>
+
+            <h3>Core Identity</h3>
+            <p>Complexity scientist who brought physics methods to economics, establishing agent-based modeling 
+            as increasingly mainstream approach. Operating from dual platform (Santa Fe Institute + Oxford) to 
+            maximize methodological innovation and policy impact.</p>
+
+            <div class="key-concept">
+                <h3>The Economic Orthodoxy Farmer Challenged</h3>
+                <p><strong>Traditional Economics Assumes:</strong></p>
+                <ul>
+                    <li>Rational agents optimizing under known constraints</li>
+                    <li>Economy reaches equilibrium where supply equals demand</li>
+                    <li>Representative agent (everyone acts like average person)</li>
+                    <li>Predictions based on equilibrium conditions</li>
+                </ul>
+                <p><strong>Problem:</strong> This approach completely failed to predict 2008 financial crisis, 
+                COVID economic disruption, or understand climate-economy feedbacks.</p>
+                <p><strong>Farmer's Alternative:</strong> Economics is a <em>complex adaptive system</em> with 
+                heterogeneous agents, out-of-equilibrium dynamics, feedback loops, and emergence.</p>
+            </div>
+
+            <h3>Key Beliefs (BROA+ Framework)</h3>
+
+            <div class="belief-item">
+                <strong>B1: Economics is Complex Adaptive System, Not Equilibrium System</strong>
+                <p>Heterogeneous agents, out-of-equilibrium dynamics essential. Can't aggregate to representative 
+                agent without losing crucial dynamics.</p>
+                <div class="conviction-bar">
+                    <div class="conviction-fill" style="width: 95%"></div>
+                </div>
+                <small>Conviction: 0.95 (foundation of entire career; 30+ years empirical support)</small>
+            </div>
+
+            <div class="belief-item">
+                <strong>B2: Agent-Based Models Can Outpredict Equilibrium Models</strong>
+                <p>ABMs capture heterogeneity, bounded rationality, interaction effects—quantitatively superior 
+                for many questions.</p>
+                <div class="conviction-bar">
+                    <div class="conviction-fill" style="width: 95%"></div>
+                </div>
+                <small>Conviction: 0.95 (strengthened from 0.90 after COVID validation)</small>
+            </div>
+
+            <div class="belief-item">
+                <strong>B7: Economic Policy Should Be Stress-Tested Computationally</strong>
+                <p>Before implementing policy in real world, test in ABM. Break things in simulation, not reality.</p>
+                <div class="conviction-bar">
+                    <div class="conviction-fill" style="width: 92%"></div>
+                </div>
+                <small>Conviction: 0.92 (strengthened from 0.85 after UK government experience)</small>
+            </div>
+
+            <h3>Farmer's Methodology: How Agent-Based Modeling Works</h3>
+
+            <div class="interactive-demo">
+                <h4>Representative Agent vs. Agent-Based Approach</h4>
+                <div class="comparison-grid">
+                    <div class="method-box">
+                        <h4>❌ Traditional Economics</h4>
+                        <ul>
+                            <li>Model "average" agent</li>
+                            <li>Assume rational optimization</li>
+                            <li>Calculate equilibrium</li>
+                            <li>Predict based on equilibrium</li>
+                            <li><strong>Misses:</strong> Heterogeneity, emergence, cascades, feedback loops</li>
+                        </ul>
+                    </div>
+                    <div class="insight-box">
+                        <h4>✅ Agent-Based Modeling</h4>
+                        <ul>
+                            <li>Model diverse agents with different strategies, beliefs, resources</li>
+                            <li>Simulate bounded rationality and learning</li>
+                            <li>Let interactions create emergent patterns</li>
+                            <li>Test against real-world outcomes</li>
+                            <li><strong>Captures:</strong> Crisis dynamics, contagion, systemic risk, innovation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Career Arc: Fundamental Physics → Applied Economics → Policy Impact</h3>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>1970s-80s:</strong> Physics education; chaos theory collective; statistical mechanics
+                </div>
+                <div class="timeline-item">
+                    <strong>1991-1999:</strong> Prediction Company—traded real money using physics methods; profits validated approach
+                </div>
+                <div class="timeline-item">
+                    <strong>1990s-2000s:</strong> Faced economics establishment resistance; "not real economics" critique
+                </div>
+                <div class="timeline-item">
+                    <strong>2008-2009:</strong> Financial crisis—ABMs captured dynamics traditional models missed
+                </div>
+                <div class="timeline-item">
+                    <strong>2012-present:</strong> Oxford appointment; central banks adopting ABMs; dual platform strategy
+                </div>
+                <div class="timeline-item">
+                    <strong>2020-2021:</strong> UK Government COVID advisory; ABMs crucial for pandemic economics
+                </div>
+                <div class="timeline-item">
+                    <strong>2024:</strong> "Making Sense of Chaos" book—framework mature for broad communication
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>The Prediction Company Proof-of-Concept</h3>
+                <p>Farmer didn't just theorize about complex systems—he put real money on the line:</p>
+                <ul>
+                    <li>Co-founded company applying physics to financial market prediction</li>
+                    <li>Built trading algorithms using dynamical systems methods</li>
+                    <li>Actually traded and made profits—ultimate reality test</li>
+                    <li>Learned: Markets are complex adaptive systems, not equilibria</li>
+                    <li>Impact: Practical validation that methods work, not just theory</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Farmer's Dual Institutional Strategy</h3>
+                <p><strong>Santa Fe Institute:</strong> Methodological innovation, interdisciplinary freedom, heterodox research</p>
+                <p><strong>Oxford Martin School:</strong> Establishment platform, policy access, resources, legitimacy</p>
+                <p><strong>Why Both Matter:</strong> Innovation capability + implementation platform = maximum impact</p>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison" class="section">
+            <h2>Functional Equivalence Across Domains</h2>
+
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                Despite working in completely different fields—atmospheric science vs. economics—Palmer and Farmer 
+                demonstrate remarkably similar approaches. This <strong>functional equivalence</strong> suggests 
+                universal principles for navigating complexity and uncertainty.
+            </p>
+
+            <h3>Shared Core Beliefs</h3>
+
+            <div class="comparison-grid">
+                <div class="card">
+                    <h4>🌪️ Palmer's Version</h4>
+                    <ul>
+                        <li>Atmosphere is <strong>chaotic nonlinear dynamical system</strong></li>
+                        <li>Weather unpredictable beyond ~10 days (<strong>chaos horizon</strong>)</li>
+                        <li><strong>Ensemble forecasting</strong> gives probability distributions</li>
+                        <li><strong>Multi-model ensembles</strong> better than single model</li>
+                        <li>Must <strong>simulate</strong>; can't solve Navier-Stokes analytically</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4>📈 Farmer's Version</h4>
+                    <ul>
+                        <li>Economy is <strong>complex adaptive system</strong></li>
+                        <li>Individual events unpredictable (crash timing, stock prices)</li>
+                        <li><strong>ABMs</strong> generate distributions of outcomes</li>
+                        <li><strong>Heterogeneous agents</strong> essential; can't use representative agent</li>
+                        <li>Must <strong>simulate</strong>; can't deduce from equilibrium assumptions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="key-concept">
+                <h3>Eight Shared Principles</h3>
+                <ol>
+                    <li><strong>Systems are fundamentally complex, not simple</strong> (chaos theory / complexity economics)</li>
+                    <li><strong>Irreducible uncertainty exists</strong> but can be quantified probabilistically</li>
+                    <li><strong>Computational modeling reveals</strong> what analysis can't deduce</li>
+                    <li><strong>Heterogeneity/diversity is essential</strong> (multi-model / heterogeneous agents)</li>
+                    <li><strong>Models must be tested rigorously</strong> against reality</li>
+                    <li><strong>Science should serve society</strong> (lives saved / policy improved)</li>
+                    <li><strong>Interdisciplinary collaboration essential</strong></li>
+                    <li><strong>Challenge orthodoxy when evidence warrants</strong></li>
+                </ol>
+            </div>
+
+            <h3>Key Differences</h3>
+
+            <div class="comparison-grid">
+                <div class="card">
+                    <h4>Palmer's Domain</h4>
+                    <p><strong>Non-Reflexive Systems:</strong> Weather doesn't change because we predict it</p>
+                    <p><strong>Clear Predictability Horizons:</strong> ~10 days for weather</p>
+                    <p><strong>Rapid Validation:</strong> Daily forecast verification</p>
+                    <p><strong>Fixed Physical Laws:</strong> Physics doesn't evolve</p>
+                    <p><strong>Institutional Context:</strong> Established operational forecasting (ECMWF)</p>
+                </div>
+
+                <div class="card">
+                    <h4>Farmer's Domain</h4>
+                    <p><strong>Highly Reflexive Systems:</strong> Markets change when predictions become public</p>
+                    <p><strong>Context-Dependent Predictability:</strong> Varies by question</p>
+                    <p><strong>Slow Validation:</strong> Economic crises rare (decades between events)</p>
+                    <p><strong>Evolving "Laws":</strong> Economic relationships change as agents adapt</p>
+                    <p><strong>Institutional Context:</strong> Contested (heterodox vs. mainstream economics)</p>
+                </div>
+            </div>
+
+            <h3>Opposite Career Trajectories (Both Authentic)</h3>
+
+            <div class="comparison-grid">
+                <div class="insight-box">
+                    <h4>Palmer: Applied → Fundamental</h4>
+                    <ul>
+                        <li>Early/mid career: Weather forecasting, hurricane warnings, climate modeling</li>
+                        <li>Later career: Quantum foundations, cosmology, fundamental physics</li>
+                        <li>Arc: Applied success enables return to big questions</li>
+                        <li>Identity shift: Meteorologist → fundamental physicist</li>
+                    </ul>
+                </div>
+
+                <div class="insight-box">
+                    <h4>Farmer: Fundamental → Applied</h4>
+                    <ul>
+                        <li>Early career: Physics, chaos theory, statistical mechanics</li>
+                        <li>Mid/later career: Financial markets, economic policy, sustainability transitions</li>
+                        <li>Arc: Big questions enable applied impact</li>
+                        <li>Identity: Complexity economist improving real-world outcomes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Why Functional Equivalence Matters</h3>
+                <p>Palmer and Farmer prove that <strong>the same capabilities work across radically different domains</strong>:</p>
+                <ul>
+                    <li><strong>Systems thinking</strong> applies to atmospheric chaos AND economic complexity</li>
+                    <li><strong>Uncertainty navigation</strong> works for weather AND markets</li>
+                    <li><strong>Ensemble/multi-agent thinking</strong> reveals dynamics in physical AND social systems</li>
+                    <li><strong>Rigorous empirical validation</strong> essential regardless of domain</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Implication:</strong> These are <em>universal</em> coordination capabilities, 
+                not domain-specific tricks. You can learn these methods and apply them to YOUR challenges—whether environmental-economic 
+                integration, career planning under uncertainty, or any complex problem-solving.</p>
+            </div>
+        </section>
+
+        <!-- PRF Section -->
+        <section id="prfs" class="section">
+            <h2>Understanding Personal Reality Frameworks (PRFs)</h2>
+
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+                A <strong>Personal Reality Framework (PRF)</strong> is how an individual's beliefs, rules, ontology, 
+                and authenticity criteria combine to create their lived experience and guide their actions. Understanding 
+                PRFs helps explain why Palmer and Farmer arrived at similar insights from different starting points.
+            </p>
+
+            <h3>The BROA+ Framework</h3>
+
+            <div class="prf-component">
+                <h4>B: Beliefs</h4>
+                <p>Core convictions about how the world works, organized by domain:</p>
+                <ul>
+                    <li><strong>Epistemic:</strong> What can be known and how (Palmer: chaos limits prediction; Farmer: emergence from heterogeneity)</li>
+                    <li><strong>Methodological:</strong> How to investigate (Palmer: ensemble methods; Farmer: agent-based modeling)</li>
+                    <li><strong>Meta-scientific:</strong> What counts as good science (both: empirical validation over theoretical elegance)</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Conviction Depth:</strong> How strongly beliefs are held (0.0-1.0), 
+                formed through reality-testing and validation. Palmer and Farmer's highest convictions (0.95) come from 
+                decades of high-stakes practical validation.</p>
+            </div>
+
+            <div class="prf-component">
+                <h4>R: Rules</h4>
+                <p>Inferential and behavioral rules that translate beliefs into action:</p>
+                <ul>
+                    <li><strong>Inferential:</strong> How to reason (Palmer: initial conditions + physics → probability distributions; 
+                    Farmer: micro-behaviors → macro-outcomes)</li>
+                    <li><strong>Behavioral:</strong> How to act (Both: quantify uncertainty, test rigorously, challenge orthodoxy when warranted)</li>
+                </ul>
+            </div>
+
+            <div class="prf-component">
+                <h4>O: Ontology</h4>
+                <p>What exists in the world according to this framework:</p>
+                <ul>
+                    <li><strong>Palmer's world contains:</strong> Deterministic physical laws, chaotic dynamics, probability distributions, 
+                    ensembles, climate system components</li>
+                    <li><strong>Farmer's world contains:</strong> Heterogeneous agents, complex adaptive systems, emergence, networks, 
+                    feedback loops, out-of-equilibrium dynamics</li>
+                    <li><strong>Both reject:</strong> Perfect predictability, single "correct" models, certainty where uncertainty fundamental</li>
+                </ul>
+            </div>
+
+            <div class="prf-component">
+                <h4>A+: Authenticity Criteria</h4>
+                <p>What feels true-to-self vs. inauthentic—guides authentic action:</p>
+                <ul>
+                    <li><strong>Palmer feels authentic:</strong> Honest about uncertainty, humanitarian impact matters, intellectual courage, 
+                    synthesis of practical and theoretical</li>
+                    <li><strong>Farmer feels authentic:</strong> Intellectual independence, empirical grounding over elegance, practical policy 
+                    impact, collaborative curiosity across disciplines</li>
+                    <li><strong>Both feel inauthentic:</strong> Overselling certainty, pure theory disconnected from reality, dogmatic 
+                    attachment to single approach</li>
+                </ul>
+            </div>
+
+            <h3>Additional PRF Components</h3>
+
+            <div class="prf-component">
+                <h4>Assembly History</h4>
+                <p>How the PRF formed through key experiences:</p>
+                <ul>
+                    <li><strong>Formative moments:</strong> Palmer discovering Lorenz's chaos theory; Farmer in Santa Cruz Dynamical Systems Collective</li>
+                    <li><strong>Reality testing:</strong> Palmer's daily forecast verification; Farmer's Prediction Company trading</li>
+                    <li><strong>Paradigm resistance:</strong> Both faced initial skepticism; evidence eventually overcame resistance</li>
+                    <li><strong>High-stakes validation:</strong> Palmer's hurricane forecasts saving lives; Farmer's COVID policy advice</li>
+                </ul>
+            </div>
+
+            <div class="prf-component">
+                <h4>ATCF: Adaptive Temporal Coherence Function</h4>
+                <p>How coherent the PRF remains over time (0.0-1.0):</p>
+                <ul>
+                    <li><strong>Palmer's ATCF: 0.90-0.95</strong> (extremely high) - Same core questions across 50+ years; 
+                    weather → climate → quantum/cosmology coherently connected through chaos theory</li>
+                    <li><strong>Farmer's ATCF: 0.85-0.90</strong> (very high) - Complexity science framework stable across 
+                    domain shifts; physics → markets → economics → sustainability all coherently integrated</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Key insight:</strong> Temporal coherence maintained through 
+                <em>methodological identity</em> (how they investigate) rather than domain identity (what they investigate). 
+                This enables career flexibility without fragmentation.</p>
+            </div>
+
+            <div class="prf-component">
+                <h4>OS2: Meta-Cognitive Awareness</h4>
+                <p>Capacity to examine and articulate own framework:</p>
+                <ul>
+                    <li><strong>Palmer's OS2:</strong> Examines ensemble methodology; questions quantum mechanics assumptions; 
+                    translates between weather/climate/quantum frameworks</li>
+                    <li><strong>Farmer's OS2:</strong> Critiques ABM limitations; engages constructively with orthodox economists; 
+                    bridges physics/economics languages; operates across Santa Fe + Oxford</li>
+                    <li><strong>Why OS2 matters:</strong> Enables interdisciplinary collaboration, paradigm navigation, effective communication, 
+                    institutional navigation, coordination across different PRFs</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>PRF Insights for Students</h3>
+                <p>Understanding Palmer and Farmer's PRFs reveals:</p>
+                <ol>
+                    <li><strong>Multiple paths to functional equivalence:</strong> Different assembly histories can produce similar capabilities</li>
+                    <li><strong>Conviction formation matters:</strong> Deepest convictions come from high-stakes reality-testing, not theory alone</li>
+                    <li><strong>Temporal coherence through method:</strong> Methodological identity more stable than domain identity</li>
+                    <li><strong>OS2 enables coordination:</strong> Can collaborate despite different ontologies if methods and values align</li>
+                    <li><strong>Authenticity requires integrity:</strong> Research choices must align with genuine values and beliefs</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Lessons Section -->
+        <section id="lessons" class="section">
+            <h2>Key Lessons for Navigating Complexity</h2>
+
+            <div class="key-concept">
+                <h3>Lesson 1: Embrace Uncertainty, Don't Hide It</h3>
+                <p><strong>Palmer:</strong> "The butterfly effect is fundamental, not exotic edge case. Uncertainty must be 
+                quantified and communicated honestly."</p>
+                <p><strong>Farmer:</strong> "Markets aren't efficient equilibria—they're out-of-equilibrium systems with 
+                irreducible uncertainty. Model the dynamics, not the fantasy."</p>
+                <p><strong>Application:</strong> In your career planning, don't optimize for single predicted future. Instead:</p>
+                <ul>
+                    <li>Identify multiple possible scenarios (like Palmer's ensemble forecasts)</li>
+                    <li>Develop capabilities that create value across scenarios</li>
+                    <li>Build adaptive capacity rather than rigid optimization</li>
+                    <li>Update strategy as uncertainty resolves</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>Lesson 2: Heterogeneity Creates Opportunity</h3>
+                <p><strong>Palmer:</strong> "Multi-model ensembles outperform single models—diversity reveals what homogeneity hides."</p>
+                <p><strong>Farmer:</strong> "Representative agent approach loses crucial information. Heterogeneous agents create 
+                emergent dynamics invisible to aggregation."</p>
+                <p><strong>Application:</strong> Your unique combination of capabilities, values, and experiences (your "heterogeneity") 
+                creates opportunities that don't exist for "average" students:</p>
+                <ul>
+                    <li>Don't treat yourself as representative student following prescribed path</li>
+                    <li>Recognize how your distinctive characteristics combine to create value</li>
+                    <li>Position yourself at intersections others miss</li>
+                    <li>Build networks that leverage complementarity</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>Lesson 3: Reality-Test Everything</h3>
+                <p><strong>Palmer:</strong> "Daily forecast verification creates rapid conviction formation. Theory must meet reality ruthlessly."</p>
+                <p><strong>Farmer:</strong> "Prediction Company put real money on the line—ultimate validation that methods work, not just theory."</p>
+                <p><strong>Application:</strong> Don't just theorize about integration approaches—test them:</p>
+                <ul>
+                    <li>Start projects that demonstrate environmental-economic integration</li>
+                    <li>Gather evidence about what works in your context</li>
+                    <li>Let conviction deepen through accumulating validation</li>
+                    <li>Iterate based on feedback, not just planning</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>Lesson 4: Institutional Resistance Doesn't Prevent Eventual Impact</h3>
+                <p><strong>Palmer's trajectory:</strong> Initial skepticism (1980s) → operational adoption (1990s) → 
+                standard practice (2000s+)</p>
+                <p><strong>Farmer's trajectory:</strong> Economics establishment resistance (1990s-2000s) → central bank 
+                adoption (2010s) → UK government use (2020s) → mainstream emergence (trajectory)</p>
+                <p><strong>Pattern:</strong> Heterodox method → dismissal → empirical evidence → practical validation → 
+                institutional adoption → eventual standard</p>
+                <p><strong>Application:</strong> Environmental-economic integration faces similar resistance now but follows 
+                same trajectory:</p>
+                <ul>
+                    <li>Be patient—paradigm shifts take decades, not years</li>
+                    <li>Focus on evidence accumulation, not persuasion</li>
+                    <li>Seek practical applications that demonstrate value</li>
+                    <li>Build institutional infrastructure for new approaches</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>Lesson 5: Methodological Identity Enables Career Flexibility</h3>
+                <p><strong>Palmer:</strong> Maintained coherence through chaos theory framework while shifting domains 
+                (weather → climate → quantum/cosmology)</p>
+                <p><strong>Farmer:</strong> Maintained coherence through complexity science framework while shifting domains 
+                (physics → markets → economics → sustainability)</p>
+                <p><strong>Insight:</strong> "I am a complexity scientist" more stable identity than "I am a meteorologist" 
+                or "I am an economist"</p>
+                <p><strong>Application:</strong> Build identity around methods and capabilities, not just domain:</p>
+                <ul>
+                    <li>Systems thinking, uncertainty navigation, stakeholder coordination, integration design, adaptive learning</li>
+                    <li>These capabilities transfer across environmental-economic domains</li>
+                    <li>Enables career adaptation without identity fragmentation</li>
+                    <li>Supports authentic development through changing contexts</li>
+                </ul>
+            </div>
+
+            <div class="key-concept">
+                <h3>Lesson 6: Humanitarian Impact Provides Authentic Motivation</h3>
+                <p><strong>Palmer:</strong> Lives saved through hurricane forecasts; climate adaptation reducing suffering</p>
+                <p><strong>Farmer:</strong> Economic well-being improved; financial crises prevented/mitigated; just transitions</p>
+                <p><strong>Why this matters:</strong></p>
+                <ul>
+                    <li>Provides sustained energy through difficult periods</li>
+                    <li>Aligns personal values with professional work</li>
+                    <li>Creates meaning beyond academic success</li>
+                    <li>Must be authentic, not just stated</li>
+                </ul>
+                <p><strong>Application:</strong> Connect your environmental-economic integration work to actual impact on 
+                communities and systems, not just personal advancement.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>The Universal Message</h3>
+                <p>Palmer and Farmer demonstrate that <strong>sophisticated uncertainty navigation is learnable and 
+                applicable across domains</strong>. Their functional equivalence proves these aren't isolated tricks 
+                but universal principles.</p>
+                <p>You can learn and apply these methods to your own environmental-economic challenges:</p>
+                <ul>
+                    <li>Use ensemble thinking for career planning under uncertainty</li>
+                    <li>Apply agent-based thinking to understand your unique positioning</li>
+                    <li>Build universal constructor capabilities that work across scenarios</li>
+                    <li>Develop high OS2 for navigating different frameworks</li>
+                    <li>Maintain temporal coherence through methodological identity</li>
+                    <li>Test integration approaches through real projects</li>
+                    <li>Stay patient through institutional resistance</li>
+                    <li>Ground work in authentic humanitarian impact</li>
+                </ul>
+            </div>
+
+            <div class="insight-box" style="margin-top: 2rem;">
+                <h3>Further Exploration</h3>
+                <p>To deepen your understanding:</p>
+                <ul>
+                    <li>Read Palmer's work on ensemble forecasting and climate uncertainty</li>
+                    <li>Read Farmer's "Making Sense of Chaos: A Better Economics for a Better World" (2024)</li>
+                    <li>Explore Santa Fe Institute resources on complexity science</li>
+                    <li>Study IPCC reports using Palmer's ensemble methods</li>
+                    <li>Investigate how central banks use Farmer's agent-based models</li>
+                    <li>Apply these frameworks to your own career and life planning</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Palmer & Farmer: Complexity Science Pioneers</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">Educational resource for understanding uncertainty navigation and complex systems</p>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetSection = button.dataset.section;
+                
+                // Update active button
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update active section
+                sections.forEach(section => section.classList.remove('active'));
+                document.getElementById(targetSection).classList.add('active');
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
-        } else {
-            addMessageToLog('ai', aiResponse, content[effectivePersona].name, effectivePersona);
-        }
+        });
 
-    } catch (error) {
-        console.error("API Error:", error);
-        const messageLog = document.getElementById('message-log');
-        if(messageLog.lastChild && messageLog.lastChild.textContent.includes("Thinking...")) {
-            messageLog.removeChild(messageLog.lastChild);
-        }
-        addMessageToLog('system', `Sorry, an error occurred. Please check your API key and network connection. (Details: ${error.message})`, "System");
-    } finally {
-        isAwaitingResponse = false;
-    }
-}
-
-async function getGenerativeAIResponse(prompt) {
-    const apiKey = sessionStorage.getItem('geminiApiKey');
-    if (!apiKey) { throw new Error("API key not found. Please set it on the setup page."); }
-    
-    // This is the CORRECTED line for AI Studio keys, using v1beta.
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
-
-    const payload = { contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.5, maxOutputTokens: 500 } };
-    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-    if (!response.ok) { const errorBody = await response.json(); throw new Error(`API request failed: ${errorBody.error.message}`); }
-    const data = await response.json();
-    if (!data.candidates || data.candidates.length === 0) { throw new Error("API returned no candidates. This may be due to a safety block or invalid input."); }
-    return data.candidates[0].content.parts[0].text;
-}
-
-// --- Helper Functions ---
-function showView(viewId) { document.querySelectorAll('.view').forEach(v => v.style.display='none'); const el = document.getElementById(viewId); el.style.display = 'flex'; }
-function startChat(persona) { 
-    currentChat = persona; 
-    const t = document.getElementById('chat-title'), m = document.getElementById('message-log'), k = document.getElementById('ai-key-container'), i = document.getElementById('user-input-container');
-    t.textContent = `Conversation with ${content[persona].name}`; 
-    m.innerHTML = ''; 
-    k.innerHTML = '<div class="ai-key-title">Suggested Questions</div>';
-    addMessageToLog('ai', content[persona].intro, content[persona].name); 
-    aiKeys[persona].forEach(keyInfo => { const b = document.createElement('button'); b.className = 'ai-key'; b.textContent = keyInfo.text || keyInfo; b.onclick = () => handleKeyClick(persona, keyInfo); k.appendChild(b); }); 
-    i.innerHTML = `<input type="text" id="user-input" class="user-input" placeholder="Type your own question..."><button id="send-button" class="send-button">Send</button>`;
-    document.getElementById('send-button').addEventListener('click', handleUserInquiry);
-    document.getElementById('user-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserInquiry(); });
-    showView('chat-view'); 
-}
-function addMessageToLog(sender, text, name, personaClass = '') { const log=document.getElementById('message-log'), div=document.createElement('div'); let sClass='', sName=name; if(sender==='user'){div.className='message user-message';sName='You'}else if(sender==='system'){div.className='message ai-message';sClass='system-sender'}else{div.className='message ai-message';if(personaClass==='palmer')sClass='palmer-sender';if(personaClass==='farmer')sClass='farmer-sender'} div.innerHTML = `<div class="message-sender ${sClass}">${sName}</div><div>${text.replace(/\n/g, '<br>')}</div>`; log.appendChild(div); scrollToBottom(); }
-function scrollToBottom() { const log = document.getElementById('message-log'); log.scrollTop = log.scrollHeight; }
-
-document.addEventListener('DOMContentLoaded', () => { 
-    checkApiKey(); 
-});
-</script>
+        // Animate conviction bars on load
+        window.addEventListener('load', () => {
+            const convictionFills = document.querySelectorAll('.conviction-fill');
+            convictionFills.forEach((fill, index) => {
+                setTimeout(() => {
+                    fill.style.transition = 'width 1s ease-out';
+                }, index * 100);
+            });
+        });
+    </script>
 </body>
 </html>
-
